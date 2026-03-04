@@ -1,0 +1,44 @@
+import { env } from '../../utils/env';
+
+/**
+ * VisionAssistant: Processes images using Gemini 1.5 Flash Vision.
+ */
+export const VisionAssistant = {
+    async analyzePhoto(base64Image, promptPrefix = "") {
+        if (!env.GEMINI_API_KEY) throw new Error('Gemini API Key missing');
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`;
+
+        const body = {
+            contents: [{
+                parts: [
+                    { text: promptPrefix || "Проанализируй фото. Какие задачи здесь нужно выполнить? Разбей их на атомарные шаги по 15 минут. Верни JSON массив: [{title, description}]" },
+                    {
+                        inline_data: {
+                            mime_type: "image/jpeg",
+                            data: base64Image // expects base64 without prefix
+                        }
+                    }
+                ]
+            }]
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) throw new Error("Vision API Failed");
+        const data = await response.json();
+
+        try {
+            const text = data.candidates[0].content.parts[0].text;
+            const cleanJson = text.replace(/```json|```/g, '').trim();
+            return JSON.parse(cleanJson);
+        } catch (e) {
+            console.error("Vision Parsing failed", e);
+            return [];
+        }
+    }
+};
