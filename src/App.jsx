@@ -104,10 +104,30 @@ const useIsMobile = () => {
   return isMobile;
 };
 
+import Modal from './components/Modal';
+import AIChat from './components/AIChat';
+
 function DashboardWrapper() {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showInactivityChat, setShowInactivityChat] = useState(false);
+
+  useEffect(() => {
+    const checkInactivity = () => {
+      const lastActivity = localStorage.getItem('last_user_activity');
+      if (lastActivity) {
+        const hoursSince = (Date.now() - new Date(lastActivity).getTime()) / (1000 * 60 * 60);
+        if (hoursSince > 6) {
+          setShowInactivityChat(true);
+          localStorage.setItem('last_user_activity', new Date().toISOString()); // reset it
+        }
+      } else {
+        localStorage.setItem('last_user_activity', new Date().toISOString());
+      }
+    };
+    checkInactivity();
+  }, []);
 
   // Real Data State
   const [goals, setGoals] = useState({}); // { 'category': { steps: [], title: ... } }
@@ -216,6 +236,15 @@ function DashboardWrapper() {
           />
         </motion.div>
       </Suspense>
+
+      <Modal isOpen={showInactivityChat} onClose={() => setShowInactivityChat(false)} title="Strategic Partner">
+        <div style={{ height: '60vh' }}>
+          <AIChat
+            initialMessage="Мага, какой статус по объекту/приложению? Что приблизило нас к цели сегодня?"
+            onClose={() => setShowInactivityChat(false)}
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

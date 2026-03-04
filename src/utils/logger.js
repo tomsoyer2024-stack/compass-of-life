@@ -57,6 +57,25 @@ class Logger {
         try {
             const criticalLogs = this.logs.filter(l => l.level === 'error' || l.level === 'warn').slice(0, 50);
             localStorage.setItem('engineering_intelligence_log', JSON.stringify(criticalLogs));
+            localStorage.setItem('last_user_activity', new Date().toISOString());
+
+            // Cloud Sync
+            import('../services/supabase').then(({ supabase }) => {
+                supabase.auth.getUser().then(({ data: { user } }) => {
+                    if (user) {
+                        supabase.from('system_logs').insert([{
+                            user_id: user.id,
+                            level: entry.level,
+                            category: entry.category,
+                            action: entry.action,
+                            data: entry.data, // assuming jsonb type in supabase
+                            timestamp: entry.timestamp
+                        }]).then(({ error }) => {
+                            if (error) console.warn('Supabase log sync failed', error);
+                        });
+                    }
+                });
+            });
         } catch (e) {
             // Silently fail if storage is full
         }

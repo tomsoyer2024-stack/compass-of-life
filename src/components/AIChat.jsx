@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme } from '../theme';
 
-export default function AIChat({ context, onClose, onApplySteps, character = 'energetic' }) {
+export default function AIChat({ context, onClose, onApplySteps, character = 'energetic', initialMessage }) {
     const { t } = useTranslation();
 
     const getInitialMessage = () => {
+        if (initialMessage) return initialMessage;
         return t(`ai.greeting_${character}`, { context });
     };
 
