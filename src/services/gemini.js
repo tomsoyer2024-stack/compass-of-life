@@ -1,6 +1,6 @@
 import { env } from '../utils/env';
 
-const BASE_URL = 'https://generativelanguage.googleapis.com/v1/models';
+const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 /**
  * Gemini Service for Life Compass AI.
@@ -15,7 +15,7 @@ export const geminiService = {
 
         if (!apiKey) throw new Error('Gemini API Key missing. Please set it in Settings.');
 
-        const url = `${BASE_URL}/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const url = `${BASE_URL}/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
         const tools = useSearch ? [{
             google_search_retrieval: {
@@ -45,6 +45,7 @@ export const geminiService = {
 
             if (!response.ok) {
                 const err = await response.json();
+                console.error("Gemini API Error Detail:", err.error?.message || err);
                 throw new Error(err.error?.message || 'Gemini API Error');
             }
 

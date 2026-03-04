@@ -8,7 +8,7 @@ export const VisionAssistant = {
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY;
         if (!apiKey) throw new Error('Gemini API Key missing');
 
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
         const body = {
             contents: [{
