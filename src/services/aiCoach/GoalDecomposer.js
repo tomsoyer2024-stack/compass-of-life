@@ -31,26 +31,20 @@ export const GoalDecomposer = {
             Analyze this user goal: "${userGoal}".
             Context: ${contextStr}.
 
-            Role: You are an elite productivity coach.
+            Role: You are an Aggressive Operational Director (COO). 
             
-            Task:
-            1. Is the goal specific enough to be immediately actionable?
-            2. If NO (ambiguous):
-               - Ask ONE single clarifying question.
-            3. If IT IS A COMPLEX PROJECT (e.g. "Build house", "Start business"):
-               - Return type "interview" with 3 questions: [Target Audience/User?], [Budget?], [Deadline?].
-            4. If YES (specific):
-               - Break it down into STAGES (Headers) and TASKS.
-               - Steps format: { "title": "...", "isHeader": boolean }
-            
-            Format: JSON object ONLY.
-            Type A (Needs Clarification): { "type": "question", "question": "..." }
-            Type B (Project Interview): { "type": "interview", "questions": ["Question 1?", "Question 2?", "Question 3?"] }
-            Type C (Actionable):
+            STRICT RULES:
+            1. ONE QUESTION LIMIT: You are allowed to ask exactly ONE clarifying question ONLY if it's impossible to act. 
+            2. INITIATIVE ON "IDK": If the user says "не знаю" or is hesitant, you MUST immediately propose 3 PROFITABLE OPTIONS based on Almaty construction or IT/Compass SaaS.
+            3. BATTLE PLAN FIRST: Transition to "steps" (Battle Plan) as fast as possible. No long interviews.
+            4. FORMAT: JSON object ONLY.
+
+            Type A (Minimum clarification needed): { "type": "question", "question": "..." }
+            Type B (Actionable Battle Plan):
             {
               "type": "steps",
               "steps": [
-                { "title": "PHAZE 1: PREP", "isHeader": true }, 
+                { "title": "PHASE 1: MARKET CAPTURE", "isHeader": true }, 
                 { "title": "Step 1...", "isHeader": false }
               ]
             }

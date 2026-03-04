@@ -317,7 +317,7 @@ export function WidgetDetailModal({ widget, t, onClose, onUpdateGoal }) {
                                 {/* Interview Mode */}
                                 {conversationState === 'interview' && (
                                     <div style={{ textAlign: 'left' }}>
-                                        <h3 style={{ fontSize: '14px', marginBottom: '10px' }}>Strategy Session</h3>
+                                        <h3 style={{ fontSize: '14px', marginBottom: '10px' }}>Battle Plan</h3>
                                         {interviewQuestions.map((q, i) => (
                                             <div key={i} style={{ marginBottom: '12px' }}>
                                                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#888' }}>{q}</label>
