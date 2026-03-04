@@ -5,7 +5,7 @@ import { env } from '../../utils/env';
  */
 export const VisionAssistant = {
     async analyzePhoto(base64Image, promptPrefix = "") {
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY;
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (env && env.GEMINI_API_KEY) || localStorage.getItem('user_gemini_api_key');
         if (!apiKey) throw new Error('Gemini API Key missing');
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;

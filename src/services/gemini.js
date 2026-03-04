@@ -10,7 +10,7 @@ export const geminiService = {
     async generateContent(prompt, systemInstruction = '', useSearch = false) {
         // BYOK: Check Local Storage first
         const userKey = localStorage.getItem('user_gemini_api_key');
-        const envKey = import.meta.env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY;
+        const envKey = import.meta.env.VITE_GEMINI_API_KEY || (env && env.GEMINI_API_KEY);
         const apiKey = userKey || envKey;
 
         if (!apiKey) throw new Error('Gemini API Key missing. Please set it in Settings.');
