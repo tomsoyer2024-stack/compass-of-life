@@ -18,6 +18,27 @@ export default function Dashboard({ t, isMobile, categoryProgressMap, userGoals 
 
     // Cleaned up free-drag positions as we use strict Grid now.
 
+    const handlers = useSwipeable({
+        onSwipedRight: () => onOpenSidebar && onOpenSidebar(),
+        trackMouse: true
+    });
+
+    // Resize Effect
+    useEffect(() => {
+        const handleResize = () => {
+            const vWidth = 400;
+            const vHeight = 850;
+            const windowW = window.innerWidth;
+            const windowH = window.innerHeight;
+            // Adaptive scaling for mobile
+            const s = isMobile ? Math.min(windowW / vWidth, windowH / vHeight) * 0.95 : Math.min(windowW / vWidth, windowH / vHeight);
+            setScale(s);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [isMobile]);
+
     return (
         <div
             {...handlers}
@@ -81,6 +102,33 @@ export default function Dashboard({ t, isMobile, categoryProgressMap, userGoals 
                 </div>
             </div>
 
+            <button
+                className="aero-card"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setDetailWidget({ id: 'voice_report', title: 'Audio Report', name: 'Strategic Report' });
+                }}
+                style={{
+                    position: 'absolute',
+                    bottom: 'max(40px, env(safe-area-inset-bottom))',
+                    right: '25px',
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '32px',
+                    background: 'linear-gradient(135deg, #007AFF 0%, #5856D6 100%)',
+                    color: 'white',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    boxShadow: '0 15px 35px rgba(0, 122, 255, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 2000,
+                    cursor: 'pointer'
+                }}
+            >
+                <div style={{ fontSize: '28px' }}>🎤</div>
+            </button>
+
             <AnimatePresence>
                 {detailWidget && (
                     <WidgetDetailModal
@@ -99,12 +147,15 @@ export default function Dashboard({ t, isMobile, categoryProgressMap, userGoals 
 const GridWidget = React.memo(({
     widget, progress, t, onClick, isFocused, isBlurred, setFocus, title
 }) => {
+    const isStrategic = widget.id === 'strategic_goal';
+
     return (
         <div
             style={{
                 position: 'relative',
-                width: '120px',
-                height: '120px',
+                width: isStrategic ? '260px' : '120px',
+                height: isStrategic ? '160px' : '120px',
+                gridColumn: isStrategic ? '1 / -1' : 'auto',
                 zIndex: isFocused ? 1500 : 10,
                 opacity: isBlurred ? 0.5 : 1,
                 transition: 'opacity 0.3s ease, transform 0.2s ease',
@@ -116,9 +167,9 @@ const GridWidget = React.memo(({
                 shape={'24px'}
             >
                 <div style={{ textAlign: 'center', pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>{widget.icon}</div>
-                    <div style={{ fontWeight: 800, fontSize: '12px', color: 'rgba(0,0,0,0.7)', lineHeight: '1.2' }}>{title}</div>
-                    <div style={{ fontSize: '11px', fontWeight: 900, color: '#007AFF', marginTop: '4px' }}>{progress}%</div>
+                    <div style={{ fontSize: isStrategic ? '40px' : '28px', marginBottom: '8px' }}>{widget.icon}</div>
+                    <div style={{ fontWeight: 800, fontSize: isStrategic ? '16px' : '12px', color: 'rgba(0,0,0,0.7)', lineHeight: '1.2' }}>{title}</div>
+                    <div style={{ fontSize: isStrategic ? '14px' : '11px', fontWeight: 900, color: '#007AFF', marginTop: '4px' }}>{progress}%</div>
                 </div>
             </BlobWidget>
         </div>

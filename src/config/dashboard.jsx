@@ -3,6 +3,19 @@ import { theme } from '../theme';
 
 export const dashboardConfig = [
     {
+        id: 'strategic_goal',
+        name: 'Strategic Goal',
+        icon: '👑',
+        position: { desktop: {}, mobile: {} },
+        renderContent: (progress, t) => (
+            <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '40px', marginBottom: '8px' }}>👑</div>
+                <div style={{ fontWeight: 900, fontSize: '15px', color: theme.colors.text.primary }}>Strategic Goal</div>
+                <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.6 }}>{progress}%</div>
+            </div>
+        )
+    },
+    {
         id: 'habits',
         name: 'nav.habits',
         icon: '🏃',

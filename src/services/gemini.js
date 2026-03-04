@@ -10,7 +10,8 @@ export const geminiService = {
     async generateContent(prompt, systemInstruction = '', useSearch = false) {
         // BYOK: Check Local Storage first
         const userKey = localStorage.getItem('user_gemini_api_key');
-        const apiKey = userKey || env.GEMINI_API_KEY;
+        const envKey = import.meta.env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY;
+        const apiKey = userKey || envKey;
 
         if (!apiKey) throw new Error('Gemini API Key missing. Please set it in Settings.');
 
@@ -71,3 +72,9 @@ export const COACH_SYSTEM_PROMPT = `
 - Будь четким, используй структуру списка возвращаемых действий. 
 - Тон: Профессиональный, поддерживающий, но бескомпромиссный на пути к миллиону.
 `;
+
+export const sendMessageToGemini = async (userMessage) => {
+    const contextPrefix = `[СИСТЕМНЫЙ КОНТЕКСТ: Наша цель — 1,000,000$. Учитывай актуальный статус по объектам строительства в Алматы и разработке приложения Compass of Life]\n\n`;
+    const prompt = contextPrefix + userMessage;
+    return await geminiService.generateContent(prompt, COACH_SYSTEM_PROMPT, true);
+};

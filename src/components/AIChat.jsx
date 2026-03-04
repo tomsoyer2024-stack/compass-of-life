@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme } from '../theme';
+import { sendMessageToGemini } from '../services/gemini';
 
 export default function AIChat({ context, onClose, onApplySteps, character = 'energetic', initialMessage }) {
     const { t } = useTranslation();
@@ -33,10 +34,11 @@ export default function AIChat({ context, onClose, onApplySteps, character = 'en
         // Simulate professional AI response logic with localization
         (async () => {
             try {
-                const response = await PersonalOnDeviceAI.generate(input, COACH_SYSTEM_PROMPT, { useSearch: true });
-                setMessages(prev => [...prev, { role: 'ai', text: response.text, source: response.source }]);
+                const responseText = await sendMessageToGemini(input);
+                setMessages(prev => [...prev, { role: 'ai', text: responseText, source: 'Strategic Partner AI' }]);
                 setIsTyping(false);
             } catch (e) {
+                console.error("Chat Error", e);
                 setMessages(prev => [...prev, { role: 'ai', text: t('ai.default_reply') }]);
                 setIsTyping(false);
             }
