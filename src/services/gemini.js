@@ -1,6 +1,6 @@
 import { env } from '../utils/env';
 
-const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
+const BASE_URL = 'https://generativelanguage.googleapis.com/v1/models';
 
 /**
  * Gemini Service for Life Compass AI.
