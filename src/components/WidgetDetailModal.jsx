@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { GoalDecomposer } from '../services/aiCoach/GoalDecomposer';
 import { syncGoalsToCloud } from '../services/supabase';
+import { env } from '../utils/env';
 
 export function WidgetDetailModal({ widget, t, onClose, onUpdateGoal }) {
     // widget now contains { ...dashboardConfigItem, ...goalData }
@@ -9,7 +10,7 @@ export function WidgetDetailModal({ widget, t, onClose, onUpdateGoal }) {
     const [goalInput, setGoalInput] = useState({ title: '', category: '' });
     const [aiSteps, setAiSteps] = useState(widget.steps || []);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
-    const hasKey = !!localStorage.getItem('user_gemini_api_key');
+    const hasKey = !!(localStorage.getItem('user_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || (env && env.GEMINI_API_KEY));
 
 
     // AI Conversation State
