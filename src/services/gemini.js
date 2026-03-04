@@ -15,15 +15,10 @@ export const geminiService = {
 
         if (!apiKey) throw new Error('Gemini API Key missing. Please set it in Settings.');
 
-        const url = `${BASE_URL}/gemini-flash-latest:generateContent?key=${apiKey}`;
+        const url = `${BASE_URL}/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const tools = useSearch ? [{
-            google_search_retrieval: {
-                dynamic_retrieval_config: {
-                    mode: "MODE_DYNAMIC",
-                    dynamic_threshold: 0.3
-                }
-            }
+            google_search: {}
         }] : [];
 
         const body = {
